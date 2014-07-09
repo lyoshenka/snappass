@@ -13,8 +13,12 @@ app.config.update(
     dict(STATIC_URL=os.environ.get('STATIC_URL', 'static')))
 
 id_ = lambda: uuid.uuid4().hex
-redis_host = os.environ.get('REDIS_HOST', 'localhost')
-redis_client = redis.StrictRedis(host=redis_host, port=6379, db=0)
+
+#redis_host = os.environ.get('REDIS_HOST', 'localhost')
+#redis_client = redis.StrictRedis(host=redis_host, port=6379, db=0)
+
+redis_url = os.getenv('REDISTOGO_URL', 'redis://localhost:6379')
+redis_client = redis.from_url(redis_url)
 
 time_conversion = {
     'week': 604800,
@@ -82,7 +86,7 @@ def show_password(password_key):
 
 
 def main():
-    app.run(host='0.0.0.0', debug=True)
+    app.run(host='0.0.0.0', port=80, debug=True)
 
 
 if __name__ == '__main__':

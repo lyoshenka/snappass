@@ -86,7 +86,8 @@ def show_password(password_key):
 
 
 def main():
-    app.run(host='0.0.0.0', port=80, debug=True)
+    port = os.getenv('PORT', 5000)
+    app.run(host='0.0.0.0', port=port, debug=True)
 
 
 if __name__ == '__main__':

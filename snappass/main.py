@@ -17,7 +17,7 @@ id_ = lambda: uuid.uuid4().hex
 #redis_host = os.environ.get('REDIS_HOST', 'localhost')
 #redis_client = redis.StrictRedis(host=redis_host, port=6379, db=0)
 
-redis_url = os.getenv('REDISTOGO_URL', 'redis://localhost:6379')
+redis_url = os.getenv('REDISTOGO_URL', os.getenv('REDIS_URL', 'redis://localhost:6379'))
 redis_client = redis.from_url(redis_url)
 
 time_conversion = {

@@ -26,7 +26,7 @@ class SnapPassTestCase(TestCase):
     def test_clean_input(self):
         # Test Bad Data
         with snappass.app.test_request_context(
-                "/", data={'password': 'foo', 'ttl': 'bar'}, method='POST'):
+                "/", data={'data': 'foo', 'ttl': 'bar'}, method='POST'):
             self.assertRaises(ClientDisconnected, snappass.clean_input)
 
         # No Password
@@ -36,11 +36,11 @@ class SnapPassTestCase(TestCase):
 
         # No TTL
         with snappass.app.test_request_context(
-                "/", data={'password': 'foo'}, method='POST'):
+                "/", data={'data': 'foo'}, method='POST'):
             self.assertRaises(ClientDisconnected, snappass.clean_input)
 
         with snappass.app.test_request_context(
-                "/", data={'password': 'foo', 'ttl': 'hour'}, method='POST'):
+                "/", data={'data': 'foo', 'ttl': 'hour'}, method='POST'):
             self.assertEqual((3600, 'foo'), snappass.clean_input())
 
 
@@ -51,10 +51,10 @@ class SnapPassRoutesTestCase(TestCase):
         self.app = snappass.app.test_client()
 
     def test_show_password(self):
-        password = "I like novelty kitten statues!"
-        key = snappass.set_password(password, 30)
+        data = "I like novelty kitten statues!"
+        key = snappass.set_password(data, 30)
         rv = self.app.get('/{}'.format(key))
-        self.assertIn(password, rv.data)
+        self.assertIn(data, rv.data)
 
 
 if __name__ == '__main__':

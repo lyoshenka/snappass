@@ -55,7 +55,4 @@ be kept secret.  See the `Flask Documentation`_ for more information.
 
 .. _Flask Documentation: http://flask.pocoo.org/docs/quickstart/#sessions
 
-`STATIC_URL` this should be the location of your static assets.  You might not
-need to change this.
-
 `NO_SSL` if you are not using SSL.

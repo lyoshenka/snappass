@@ -12,8 +12,6 @@ sys.setdefaultencoding('utf8')
 NO_SSL = os.environ.get('NO_SSL', False)
 app = Flask(__name__)
 app.secret_key = os.environ.get('SECRET_KEY', 'Secret Key')
-app.config.update(
-    dict(STATIC_URL=os.environ.get('STATIC_URL', 'static')))
 
 id_ = lambda: uuid.uuid4().hex
 
@@ -22,13 +20,6 @@ id_ = lambda: uuid.uuid4().hex
 
 redis_url = os.getenv('REDISTOGO_URL', os.getenv('REDIS_URL', 'redis://localhost:6379'))
 redis_client = redis.from_url(redis_url)
-
-time_conversion = {
-    'week': 604800,
-    'day': 86400,
-    'hour': 3600
-}
-
 
 def set_password(password, ttl):
     key = id_()
@@ -54,11 +45,8 @@ def clean_input():
     if not 'ttl' in request.form:
         abort(400)
 
-    time_period = request.form['ttl'].lower()
-    if not time_period in time_conversion:
-        abort(400)
-
-    return time_conversion[time_period], request.form['data']
+    ttl = max(int(request.form['ttl']), 604800)
+    return ttl, request.form['data']
 
 
 @app.route('/', methods=['GET'])

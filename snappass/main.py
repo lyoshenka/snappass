@@ -1,10 +1,13 @@
 import os
 import uuid
+import sys  
 
 import redis
 
 from flask import abort, Flask, render_template, request
 
+reload(sys)  
+sys.setdefaultencoding('utf8')
 
 NO_SSL = os.environ.get('NO_SSL', False)
 app = Flask(__name__)
@@ -29,14 +32,14 @@ time_conversion = {
 
 def set_password(password, ttl):
     key = id_()
-    redis_client.set(key, password)
-    redis_client.expire(key, ttl)
+    redis_client.set('snappass:'+key, password)
+    redis_client.expire('snappass:'+key, ttl)
     return key
 
 
 def get_password(key):
-    password = redis_client.get(key)
-    redis_client.delete(key)
+    password = redis_client.get('snappass:'+key)
+    redis_client.delete('snappass:'+key)
     return password
 
 
@@ -45,7 +48,7 @@ def clean_input():
     Make sure we're not getting bad data from the front end,
     format data to be machine readable
     """
-    if not 'password' in request.form:
+    if not 'data' in request.form:
         abort(400)
 
     if not 'ttl' in request.form:
@@ -55,7 +58,7 @@ def clean_input():
     if not time_period in time_conversion:
         abort(400)
 
-    return time_conversion[time_period], request.form['password']
+    return time_conversion[time_period], request.form['data']
 
 
 @app.route('/', methods=['GET'])

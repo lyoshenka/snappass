@@ -1,12 +1,12 @@
 import os
 import uuid
-import sys  
+import sys
 
 import redis
 
 from flask import abort, Flask, render_template, request
 
-reload(sys)  
+reload(sys)
 sys.setdefaultencoding('utf8')
 
 NO_SSL = os.environ.get('NO_SSL', False)
@@ -71,7 +71,7 @@ def handle_password():
 def show_password(password_key):
     password = get_password(password_key)
     if not password:
-        abort(404)
+        return render_template('404.html')
 
     return render_template('password.html', password=password)
 
